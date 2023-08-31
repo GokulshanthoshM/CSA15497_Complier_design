@@ -1,0 +1,33 @@
+%{
+#include <stdio.h>
+%}
+
+%%
+[0-9]+(\.[0-9]+)?   { printf("NUMBER: %s\n", yytext); }
+[ \t\n]            { /* Ignore whitespace and newlines */ }
+"+"                { printf("ADD\n"); }
+"-"                { printf("SUBTRACT\n"); }
+"*"                { printf("MULTIPLY\n"); }
+"/"                { printf("DIVIDE\n"); }
+"("                { printf("LEFT PARENTHESIS\n"); }
+")"                { printf("RIGHT PARENTHESIS\n"); }
+.                  { printf("UNRECOGNIZED CHARACTER: %s\n", yytext); }
+%%
+yywrap(){}
+int main(int argc, char** argv) {
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s <input_file>\n", argv[0]);
+        return 1;
+    }
+
+    yyin = fopen(argv[1], "r");
+    if (yyin == NULL) {
+        perror("Error opening file");
+        return 1;
+    }
+
+    yylex();
+    fclose(yyin);
+
+    return 0;
+}

@@ -1,0 +1,22 @@
+%{
+#include <stdio.h>
+int max_length = 0;
+int current_length = 0;
+%}
+
+%%
+[a-zA-Z]+ {
+    current_length = yyleng; // yyleng is a built-in variable in Lex that stores the length of the matched text
+    if (current_length > max_length) {
+        max_length = current_length;
+    }
+}
+. ;
+
+%%
+int yywrap(){}
+int main() {
+    yylex();
+    printf("Length of the longest word: %d\n", max_length);
+    return 0;
+}
